@@ -5,7 +5,7 @@ from django.http import Http404, HttpResponse,JsonResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Bakim_List
 from boApp.serializers import BakimSerializer
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser,MultiPartParser,FormParser
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from rest_framework.views import APIView
@@ -14,6 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class TodoView(APIView):
     permission_classes=[IsAuthenticated]
+    parser_classes=[MultiPartParser,FormParser]
     
     
     def get(self,request):        
@@ -22,9 +23,9 @@ class TodoView(APIView):
         return Response(serializer.data)
 
     def post(self,request):
-        print("Buraya kadar geldi.....")
-        data = JSONParser().parse(request)
-        serializer = BakimSerializer(data=data)
+        print(" *******todo gönderildi********")
+        print(request.data)
+        serializer = BakimSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
@@ -33,8 +34,11 @@ class TodoView(APIView):
 
 class TodoDetailsView(APIView):
     permission_classes=[IsAuthenticated]
+    parser_classes=[MultiPartParser,FormParser]
     def getObject(self,pk):
         try:
+            print("///////////////")
+            print(pk)
             return Bakim_List.objects.get(pk=pk)
         except Bakim_List.DoesNotExist:
             raise Http404

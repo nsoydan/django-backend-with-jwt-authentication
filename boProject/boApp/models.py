@@ -35,7 +35,7 @@ class Bakim_List(models.Model):
     isiYapan=models.CharField(max_length=50,null=True)
     sehir=models.CharField(max_length=50,null=True)
     tutanak=models.ImageField(null=True,blank=True, upload_to='bakimOnarim/tutanak/%Y/%m/%d/')
-    firma=models.ForeignKey(Firma,on_delete=models.DO_NOTHING)
+    firma=models.CharField(max_length=50,null=True,blank=True)
 
     def __str__(self):
         return self.firma.firmaAdi
